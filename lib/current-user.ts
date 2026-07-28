@@ -1,8 +1,7 @@
 import { headers } from "next/headers";
-import { Role } from "@prisma/client";
 import { verifyToken } from "@/lib/jwt";
 
-export async function requireAuth() {
+export async function getCurrentUser() {
   const headerList = await headers();
 
   const authorization = headerList.get("authorization");
@@ -14,13 +13,4 @@ export async function requireAuth() {
   const token = authorization.substring(7);
 
   return verifyToken(token);
-}
-
-export function requireRole(
-  user: { role: Role },
-  allowedRoles: Role[]
-) {
-  if (!allowedRoles.includes(user.role)) {
-    throw new Error("Forbidden");
-  }
 }

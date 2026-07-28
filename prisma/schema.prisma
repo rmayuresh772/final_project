@@ -119,6 +119,9 @@ model Expense {
   submittedAt DateTime?
   approvedAt  DateTime?
 
+  rejectedAt      DateTime?
+  rejectionReason String?
+
   isDeleted Boolean @default(false)
 
   createdAt DateTime @default(now())
