@@ -1,5 +1,8 @@
 import { cookies } from "next/headers";
+
 import ProfileCard from "@/components/profile/ProfileCard";
+import LogoutButton from "@/components/profile/LogoutButton";
+
 
 
 async function getProfile(){
@@ -13,7 +16,7 @@ async function getProfile(){
     {
       cache:"no-store",
       headers:{
-        Cookie:cookieStore.toString()
+        Cookie: cookieStore.toString()
       }
     }
   );
@@ -29,10 +32,12 @@ async function getProfile(){
 
 
 
+
 export default async function ProfilePage(){
 
 
   const user = await getProfile();
+
 
 
 
@@ -47,6 +52,7 @@ export default async function ProfilePage(){
     >
 
 
+
       <h1
         className="
         text-3xl
@@ -56,6 +62,7 @@ export default async function ProfilePage(){
       >
         Profile
       </h1>
+
 
 
 
@@ -71,14 +78,35 @@ export default async function ProfilePage(){
 
 
 
+
+
       {
         user ? (
 
-          <ProfileCard
-            user={user}
-          />
+          <>
+
+            <ProfileCard
+              user={user}
+            />
+
+
+            <div
+              className="
+              mt-6
+              max-w-md
+              "
+            >
+
+              <LogoutButton />
+
+            </div>
+
+
+          </>
+
 
         ) : (
+
 
           <div
             className="
@@ -89,11 +117,15 @@ export default async function ProfilePage(){
             text-gray-600
             "
           >
+
             Unable to load profile.
+
           </div>
+
 
         )
       }
+
 
 
 
