@@ -1,16 +1,25 @@
-import { headers } from "next/headers";
+import { cookies } from "next/headers";
 import { verifyToken } from "@/lib/jwt";
 
+
 export async function getCurrentUser() {
-  const headerList = await headers();
 
-  const authorization = headerList.get("authorization");
 
-  if (!authorization?.startsWith("Bearer ")) {
+  const cookieStore = await cookies();
+
+
+  const token = cookieStore.get("token")?.value;
+
+
+
+  if (!token) {
+
     throw new Error("Unauthorized");
+
   }
 
-  const token = authorization.substring(7);
+
 
   return verifyToken(token);
+
 }
