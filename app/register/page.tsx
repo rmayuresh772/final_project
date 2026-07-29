@@ -4,21 +4,31 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 
-export default function LoginPage() {
+export default function RegisterPage() {
 
   const router = useRouter();
 
+
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [organizationName, setOrganizationName] = useState("");
+  const [organizationSlug, setOrganizationSlug] = useState("");
+
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
 
 
-  async function handleLogin(e: React.FormEvent) {
+
+  async function handleRegister(
+    e: React.FormEvent
+  ) {
 
     e.preventDefault();
+
 
     try {
 
@@ -26,45 +36,62 @@ export default function LoginPage() {
       setError("");
 
 
+
       const res = await fetch(
-        "/api/auth/login",
+        "/api/auth/register",
         {
-          method:"POST",
-          headers:{
-            "Content-Type":"application/json",
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json",
           },
-          body:JSON.stringify({
+
+          body: JSON.stringify({
+
+            name,
+
             email,
+
             password,
+
+            organizationName,
+
+            organizationSlug,
+
           }),
+
         }
       );
+
 
 
       const data = await res.json();
 
 
-      if(!data.success){
 
-        setError(data.message || "Login failed");
+      if (!data.success) {
+
+        setError(
+          Array.isArray(data.message)
+            ? data.message.map((err:any)=>err.message).join(", ")
+            : data.message || "Registration failed"
+        );
 
         return;
 
       }
 
 
-      localStorage.setItem(
-        "token",
-        data.data.token
+
+      router.push("/login");
+
+
+
+    } catch (error) {
+
+      setError(
+        "Something went wrong"
       );
-
-
-      router.push("/dashboard");
-
-
-    } catch(error){
-
-      setError("Something went wrong");
 
     } finally {
 
@@ -73,6 +100,8 @@ export default function LoginPage() {
     }
 
   }
+
+
 
 
 
@@ -106,7 +135,7 @@ export default function LoginPage() {
 
 
 
-        {/* Logo */}
+        {/* Header */}
 
         <div
           className="
@@ -114,6 +143,7 @@ export default function LoginPage() {
           mb-8
           "
         >
+
 
           <div
             className="
@@ -133,6 +163,7 @@ export default function LoginPage() {
           </div>
 
 
+
           <h1
             className="
             mt-4
@@ -141,8 +172,9 @@ export default function LoginPage() {
             text-gray-900
             "
           >
-            Expense Tracker
+            Create Account
           </h1>
+
 
 
           <p
@@ -151,11 +183,12 @@ export default function LoginPage() {
             text-gray-500
             "
           >
-            Sign in to manage your expenses
+            Join Expense Tracker
           </p>
 
 
         </div>
+
 
 
 
@@ -185,14 +218,69 @@ export default function LoginPage() {
 
 
 
+
         <form
-          onSubmit={handleLogin}
+          onSubmit={handleRegister}
           className="
           space-y-5
           "
         >
 
 
+
+
+          {/* Name */}
+
+          <div>
+
+            <label
+              className="
+              mb-2
+              block
+              text-sm
+              font-medium
+              text-gray-700
+              "
+            >
+              Name
+            </label>
+
+
+            <input
+
+              value={name}
+
+              onChange={(e)=>setName(e.target.value)}
+
+              placeholder="Mayuresh Raskar"
+
+              className="
+              w-full
+              rounded-xl
+              border
+              border-gray-300
+              px-4
+              py-3
+              text-gray-900
+              outline-none
+              focus:border-blue-500
+              focus:ring-2
+              focus:ring-blue-200
+              "
+
+              required
+
+            />
+
+          </div>
+
+
+
+
+
+
+
+          {/* Email */}
 
           <div>
 
@@ -217,20 +305,17 @@ export default function LoginPage() {
 
               onChange={(e)=>setEmail(e.target.value)}
 
-              placeholder="admin@acme.com"
+              placeholder="mayuresh@gmail.com"
 
               className="
               w-full
               rounded-xl
               border
               border-gray-300
-              bg-white
               px-4
               py-3
               text-gray-900
-              placeholder:text-gray-400
               outline-none
-              transition
               focus:border-blue-500
               focus:ring-2
               focus:ring-blue-200
@@ -245,6 +330,115 @@ export default function LoginPage() {
 
 
 
+
+
+
+
+          {/* Organization Name */}
+
+          <div>
+
+            <label
+              className="
+              mb-2
+              block
+              text-sm
+              font-medium
+              text-gray-700
+              "
+            >
+              Organization Name
+            </label>
+
+
+            <input
+
+              value={organizationName}
+
+              onChange={(e)=>setOrganizationName(e.target.value)}
+
+              placeholder="Acme Technologies"
+
+              className="
+              w-full
+              rounded-xl
+              border
+              border-gray-300
+              px-4
+              py-3
+              text-gray-900
+              outline-none
+              focus:border-blue-500
+              focus:ring-2
+              focus:ring-blue-200
+              "
+
+              required
+
+            />
+
+          </div>
+
+
+
+
+
+
+
+
+          {/* Organization Slug */}
+
+          <div>
+
+            <label
+              className="
+              mb-2
+              block
+              text-sm
+              font-medium
+              text-gray-700
+              "
+            >
+              Organization Slug
+            </label>
+
+
+            <input
+
+              value={organizationSlug}
+
+              onChange={(e)=>setOrganizationSlug(e.target.value)}
+
+              placeholder="acme-technologies"
+
+              className="
+              w-full
+              rounded-xl
+              border
+              border-gray-300
+              px-4
+              py-3
+              text-gray-900
+              outline-none
+              focus:border-blue-500
+              focus:ring-2
+              focus:ring-blue-200
+              "
+
+              required
+
+            />
+
+          </div>
+
+
+
+
+
+
+
+
+          {/* Password */}
 
           <div>
 
@@ -269,20 +463,17 @@ export default function LoginPage() {
 
               onChange={(e)=>setPassword(e.target.value)}
 
-              placeholder="••••••••"
+              placeholder="Minimum 8 characters"
 
               className="
               w-full
               rounded-xl
               border
               border-gray-300
-              bg-white
               px-4
               py-3
               text-gray-900
-              placeholder:text-gray-400
               outline-none
-              transition
               focus:border-blue-500
               focus:ring-2
               focus:ring-blue-200
@@ -294,6 +485,8 @@ export default function LoginPage() {
 
 
           </div>
+
+
 
 
 
@@ -312,9 +505,7 @@ export default function LoginPage() {
             py-3
             font-semibold
             text-white
-            transition
             hover:bg-blue-700
-            disabled:cursor-not-allowed
             disabled:opacity-50
             "
 
@@ -322,38 +513,14 @@ export default function LoginPage() {
 
             {
               loading
-              ? "Signing in..."
-              : "Login"
+              ? "Creating..."
+              : "Sign Up"
             }
+
 
           </button>
 
-            <div className="mt-5 text-center">
 
-  <p className="text-sm text-gray-500">
-    Don't have an account?
-  </p>
-
-
-  <button
-    type="button"
-    onClick={() => router.push("/register")}
-    className="
-    mt-2
-    w-full
-    rounded-xl
-    border
-    border-blue-600
-    py-3
-    font-semibold
-    text-blue-600
-    hover:bg-blue-50
-    "
-  >
-    Create Account
-  </button>
-
-</div>
 
 
         </form>
@@ -362,16 +529,31 @@ export default function LoginPage() {
 
 
 
-        <p
+
+
+        <button
+
+          onClick={()=>router.push("/login")}
+
           className="
-          mt-6
-          text-center
-          text-sm
-          text-gray-500
+          mt-5
+          w-full
+          rounded-xl
+          border
+          border-gray-300
+          py-3
+          font-semibold
+          text-gray-700
+          hover:bg-gray-50
           "
+
         >
-          Secure company expense management
-        </p>
+
+          Already have account? Login
+
+        </button>
+
+
 
 
 
