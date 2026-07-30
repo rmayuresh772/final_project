@@ -1,5 +1,5 @@
 import {
-    approveExpense,
+  approveExpense,
   createExpense,
   deleteExpense,
   getExpenseById,
@@ -8,6 +8,8 @@ import {
   submitExpense,
   updateExpense,
 } from "@/repositories/expense.repository";
+
+import { createAuditLog } from "@/repositories/audit.repository";
 
 import { CreateExpenseInput } from "@/validators/expense.validator";
 
@@ -66,7 +68,8 @@ export async function updateExpenseService(
 
 export async function deleteExpenseService(
   id: string,
-  organizationId: string
+  organizationId: string,
+  userId: string
 ) {
   const expense = await getExpenseById(id, organizationId);
 
@@ -80,6 +83,16 @@ export async function deleteExpenseService(
 
   await deleteExpense(id, organizationId);
 
+  await createAuditLog({
+    organizationId,
+    userId,
+    action: "DELETE",
+    entity: "Expense",
+    entityId: id,
+    fromStatus: expense.status,
+    toStatus: "DELETED",
+  });
+
   return {
     message: "Expense deleted successfully",
   };
@@ -87,7 +100,8 @@ export async function deleteExpenseService(
 
 export async function submitExpenseService(
   id: string,
-  organizationId: string
+  organizationId: string,
+  userId: string
 ) {
   const expense = await getExpenseById(id, organizationId);
 
@@ -101,12 +115,24 @@ export async function submitExpenseService(
 
   await submitExpense(id, organizationId);
 
+  await createAuditLog({
+    organizationId,
+    userId,
+    action: "SUBMIT",
+    entity: "Expense",
+    entityId: id,
+    fromStatus: expense.status,
+    toStatus: "SUBMITTED",
+  });
+
   return getExpenseById(id, organizationId);
 }
 
 export async function approveExpenseService(
   id: string,
-  organizationId: string
+  organizationId: string,
+  userId: string,
+  overrideBudget?: boolean
 ) {
   const expense = await getExpenseById(id, organizationId);
 
@@ -118,7 +144,26 @@ export async function approveExpenseService(
     throw new Error("Only submitted expenses can be approved");
   }
 
+  // Budget check: if no override flag, check if approval would exceed monthly budget
+  if (!overrideBudget) {
+    const { checkBudget } = await import("@/services/budget.service");
+    const budgetWarning = await checkBudget(organizationId, Number(expense.amount));
+    if (budgetWarning) {
+      throw new Error(budgetWarning);
+    }
+  }
+
   await approveExpense(id, organizationId);
+
+  await createAuditLog({
+    organizationId,
+    userId,
+    action: "APPROVE",
+    entity: "Expense",
+    entityId: id,
+    fromStatus: expense.status,
+    toStatus: "APPROVED",
+  });
 
   return getExpenseById(id, organizationId);
 }
@@ -126,6 +171,7 @@ export async function approveExpenseService(
 export async function rejectExpenseService(
   id: string,
   organizationId: string,
+  userId: string,
   reason: string
 ) {
   const expense = await getExpenseById(id, organizationId);
@@ -139,6 +185,17 @@ export async function rejectExpenseService(
   }
 
   await rejectExpense(id, organizationId, reason);
+
+  await createAuditLog({
+    organizationId,
+    userId,
+    action: "REJECT",
+    entity: "Expense",
+    entityId: id,
+    fromStatus: expense.status,
+    toStatus: "REJECTED",
+    metadata: { reason },
+  });
 
   return getExpenseById(id, organizationId);
 }

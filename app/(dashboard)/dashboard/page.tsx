@@ -162,7 +162,7 @@ data={data.summary}
 
 
 <MonthlyExpenseChart
-  data={data.monthly.map((item)=>({
+  data={data.monthly.map((item: { month: string; total: number })=>({
     month:item.month,
     total:Number(item.total)
   }))}

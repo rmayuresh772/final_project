@@ -15,7 +15,7 @@ export async function getDashboardSummary(
     prisma.expense.count({
       where: {
         organizationId,
-        isDeleted: false,
+        deletedAt: null,
       },
     }),
 
@@ -23,7 +23,7 @@ export async function getDashboardSummary(
       where: {
         organizationId,
         status: ExpenseStatus.DRAFT,
-        isDeleted: false,
+        deletedAt: null,
       },
     }),
 
@@ -31,7 +31,7 @@ export async function getDashboardSummary(
       where: {
         organizationId,
         status: ExpenseStatus.SUBMITTED,
-        isDeleted: false,
+        deletedAt: null,
       },
     }),
 
@@ -39,7 +39,7 @@ export async function getDashboardSummary(
       where: {
         organizationId,
         status: ExpenseStatus.APPROVED,
-        isDeleted: false,
+        deletedAt: null,
       },
     }),
 
@@ -47,14 +47,14 @@ export async function getDashboardSummary(
       where: {
         organizationId,
         status: ExpenseStatus.REJECTED,
-        isDeleted: false,
+        deletedAt: null,
       },
     }),
 
     prisma.expense.aggregate({
       where: {
         organizationId,
-        isDeleted: false,
+        deletedAt: null,
       },
       _sum: {
         amount: true,
@@ -78,7 +78,7 @@ export async function getRecentExpenses(
   return prisma.expense.findMany({
     where: {
       organizationId,
-      isDeleted: false,
+      deletedAt: null,
     },
     orderBy: {
       createdAt: "desc",
@@ -103,7 +103,7 @@ export async function getPendingExpenses(
     where: {
       organizationId,
       status: ExpenseStatus.SUBMITTED,
-      isDeleted: false,
+      deletedAt: null,
     },
     orderBy: {
       createdAt: "desc",
@@ -120,8 +120,6 @@ export async function getPendingExpenses(
   });
 }
 
-
-
 export async function getMonthlyExpenses(
   organizationId: string
 ) {
@@ -129,7 +127,7 @@ export async function getMonthlyExpenses(
     where: {
       organizationId,
       status: ExpenseStatus.APPROVED,
-      isDeleted: false,
+      deletedAt: null,
     },
     select: {
       amount: true,

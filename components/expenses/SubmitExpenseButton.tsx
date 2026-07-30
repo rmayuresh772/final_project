@@ -13,6 +13,7 @@ export default function SubmitExpenseButton({
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
 
 
@@ -21,7 +22,7 @@ export default function SubmitExpenseButton({
     try {
 
       setLoading(true);
-
+      setError("");
 
       const res = await fetch(
         `/api/expenses/${id}/submit`,
@@ -30,18 +31,20 @@ export default function SubmitExpenseButton({
         }
       );
 
-
-      const data = await res.json();
-
+      const text = await res.text();
+      let data: { success?: boolean; message?: string };
+      try {
+        data = JSON.parse(text);
+      } catch {
+        throw new Error(
+          `Server returned ${res.status} ${res.statusText}. Expected JSON but got: ${text.slice(0, 100)}`
+        );
+      }
 
       if (data.success) {
-
         router.refresh();
-
       } else {
-
-        console.error(data.message);
-
+        setError(data.message || "Failed to submit expense");
       }
 
 
@@ -50,6 +53,11 @@ export default function SubmitExpenseButton({
       console.error(
         "Submit expense failed:",
         error
+      );
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong"
       );
 
     } finally {
@@ -63,39 +71,38 @@ export default function SubmitExpenseButton({
 
 
   return (
+    <div>
+      <button
+        onClick={submitExpense}
+        disabled={loading}
+        className="
+        mt-5
+        w-full
+        rounded-lg
+        bg-blue-600
+        px-4
+        py-2
+        text-sm
+        font-semibold
+        text-white
+        hover:bg-blue-700
+        disabled:cursor-not-allowed
+        disabled:opacity-50
+        "
+      >
+        {
+          loading
+            ? "Submitting..."
+            : "Submit Expense"
+        }
+      </button>
 
-    <button
-
-      onClick={submitExpense}
-
-      disabled={loading}
-
-      className="
-      mt-5
-      w-full
-      rounded-lg
-      bg-blue-600
-      px-4
-      py-2
-      text-sm
-      font-semibold
-      text-white
-      hover:bg-blue-700
-      disabled:cursor-not-allowed
-      disabled:opacity-50
-      "
-
-    >
-
-      {
-        loading
-          ? "Submitting..."
-          : "Submit Expense"
-      }
-
-
-    </button>
-
+      {error && (
+        <p className="mt-2 text-sm text-red-600">
+          {error}
+        </p>
+      )}
+    </div>
   );
 
 }

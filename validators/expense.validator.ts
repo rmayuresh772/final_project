@@ -3,13 +3,19 @@ import { ExpenseCategory } from "@prisma/client";
 
 export const createExpenseSchema = z.object({
   title: z.string().min(3, "Title is required"),
-
   description: z.string().optional(),
-
   amount: z.number().positive("Amount must be greater than 0"),
-
   category: z.nativeEnum(ExpenseCategory),
-
+  dateIncurred: z
+    .string()
+    .optional()
+    .default(() => new Date().toISOString())
+    .transform((val) => new Date(val)),
+  receiptReference: z
+    .string()
+    .min(1, "Receipt reference is required")
+    .optional()
+    .default(() => `REC-${Date.now()}`),
   receiptUrl: z.string().url().optional(),
 });
 

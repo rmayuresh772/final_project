@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import { requireAuth, requireRole } from "@/lib/auth";
 import { approveExpenseService } from "@/services/expense.service";
@@ -11,7 +11,7 @@ interface Params {
 }
 
 export async function POST(
-  req: Request,
+  req: NextRequest,
   { params }: Params
 ) {
   try {
@@ -21,20 +21,26 @@ export async function POST(
 
     const { id } = await params;
 
+    const body = await req.json().catch(() => ({}));
+    const overrideBudget = body.overrideBudget === true;
+
     const expense = await approveExpenseService(
       id,
-      user.organizationId
+      user.organizationId,
+      user.userId,
+      overrideBudget
     );
 
     return NextResponse.json({
       success: true,
       data: expense,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Something went wrong";
     return NextResponse.json(
       {
         success: false,
-        message: error.message,
+        message,
       },
       { status: 400 }
     );

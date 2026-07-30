@@ -28,11 +28,12 @@ export async function GET(
       success: true,
       data: expense,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Not found";
     return NextResponse.json(
       {
         success: false,
-        message: error.message,
+        message,
       },
       {
         status: 404,
@@ -64,11 +65,12 @@ export async function PATCH(
       success: true,
       data: expense,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Something went wrong";
     return NextResponse.json(
       {
         success: false,
-        message: error.message,
+        message,
       },
       { status: 400 }
     );
@@ -86,18 +88,20 @@ export async function DELETE(
 
     const result = await deleteExpenseService(
       id,
-      user.organizationId
+      user.organizationId,
+      user.userId
     );
 
     return NextResponse.json({
       success: true,
       ...result,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Something went wrong";
     return NextResponse.json(
       {
         success: false,
-        message: error.message,
+        message,
       },
       { status: 400 }
     );

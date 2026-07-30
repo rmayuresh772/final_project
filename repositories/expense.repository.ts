@@ -8,6 +8,8 @@ interface CreateExpenseParams {
   description?: string;
   amount: number;
   category: ExpenseCategory;
+  dateIncurred: Date;
+  receiptReference: string;
   receiptUrl?: string;
 }
 
@@ -20,6 +22,8 @@ export async function createExpense(data: CreateExpenseParams) {
       description: data.description,
       amount: data.amount,
       category: data.category,
+      dateIncurred: data.dateIncurred,
+      receiptReference: data.receiptReference,
       receiptUrl: data.receiptUrl,
       status: ExpenseStatus.DRAFT,
     },
@@ -32,7 +36,7 @@ export async function getExpensesByOrganization(
   return prisma.expense.findMany({
     where: {
       organizationId,
-      isDeleted: false,
+      deletedAt: null,
     },
     orderBy: {
       createdAt: "desc",
@@ -48,7 +52,7 @@ export async function getExpenseById(
     where: {
       id,
       organizationId,
-      isDeleted: false,
+      deletedAt: null,
     },
   });
 }
@@ -61,6 +65,8 @@ export async function updateExpense(
     description?: string;
     amount?: number;
     category?: ExpenseCategory;
+    dateIncurred?: Date;
+    receiptReference?: string;
     receiptUrl?: string;
   }
 ) {
@@ -68,7 +74,7 @@ export async function updateExpense(
     where: {
       id,
       organizationId,
-      isDeleted: false,
+      deletedAt: null,
       status: ExpenseStatus.DRAFT,
     },
     data,
@@ -83,11 +89,11 @@ export async function deleteExpense(
     where: {
       id,
       organizationId,
-      isDeleted: false,
+      deletedAt: null,
       status: ExpenseStatus.DRAFT,
     },
     data: {
-      isDeleted: true,
+      deletedAt: new Date(),
     },
   });
 }
@@ -101,7 +107,7 @@ export async function submitExpense(
       id,
       organizationId,
       status: ExpenseStatus.DRAFT,
-      isDeleted: false,
+      deletedAt: null,
     },
     data: {
       status: ExpenseStatus.SUBMITTED,
@@ -119,7 +125,7 @@ export async function approveExpense(
       id,
       organizationId,
       status: ExpenseStatus.SUBMITTED,
-      isDeleted: false,
+      deletedAt: null,
     },
     data: {
       status: ExpenseStatus.APPROVED,
@@ -138,7 +144,7 @@ export async function rejectExpense(
       id,
       organizationId,
       status: ExpenseStatus.SUBMITTED,
-      isDeleted: false,
+      deletedAt: null,
     },
     data: {
       status: ExpenseStatus.REJECTED,

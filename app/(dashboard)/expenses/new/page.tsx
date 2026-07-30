@@ -67,20 +67,15 @@ export default function NewExpensePage() {
       );
 
 
-      if(!res.ok){
-        throw new Error("Failed");
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Failed to create expense");
       }
-
 
       router.push("/expenses");
       router.refresh();
-
-
-    }
-    catch(err){
-
-      alert("Something went wrong");
-
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Something went wrong");
     }
     finally{
 
@@ -334,8 +329,8 @@ export default function NewExpensePage() {
                     Food
                   </option>
 
-                  <option value="OFFICE">
-                    Office
+                  <option value="EQUIPMENT">
+                    Equipment
                   </option>
 
                   <option value="OTHER">
