@@ -12,13 +12,18 @@ export default function LogoutButton(){
 
 
 
-  function handleLogout(){
+async function handleLogout(){
 
-    localStorage.removeItem("token");
+  await fetch("/api/auth/logout", {
+    method:"POST",
+  });
 
-    router.push("/login");
 
-  }
+  router.push("/login");
+
+  router.refresh();
+
+}
 
 
 
