@@ -3,11 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-
 export default function RegisterPage() {
-
   const router = useRouter();
-
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -16,125 +13,81 @@ export default function RegisterPage() {
   const [organizationName, setOrganizationName] = useState("");
   const [organizationSlug, setOrganizationSlug] = useState("");
 
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-
-
-
-  async function handleRegister(
-    e: React.FormEvent
-  ) {
-
+  async function handleRegister(e: React.FormEvent) {
     e.preventDefault();
 
-
     try {
-
       setLoading(true);
       setError("");
 
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
 
+        headers: {
+          "Content-Type": "application/json",
+        },
 
-      const res = await fetch(
-        "/api/auth/register",
-        {
-          method: "POST",
+        body: JSON.stringify({
+          name,
 
-          headers: {
-            "Content-Type": "application/json",
-          },
+          email,
 
-          body: JSON.stringify({
+          password,
 
-            name,
+          organizationName,
 
-            email,
-
-            password,
-
-            organizationName,
-
-            organizationSlug,
-
-          }),
-
-        }
-      );
-
-
+          organizationSlug,
+        }),
+      });
 
       const data = await res.json();
 
-
-
       if (!data.success) {
-
         setError(
           Array.isArray(data.message)
-            ? data.message.map((err:any)=>err.message).join(", ")
-            : data.message || "Registration failed"
+            ? data.message.map((err: any) => err.message).join(", ")
+            : data.message || "Registration failed",
         );
 
         return;
-
       }
 
-
-
       router.push("/login");
-
-
-
     } catch (error) {
-
-      setError(
-        "Something went wrong"
-      );
-
+      setError("Something went wrong");
     } finally {
-
       setLoading(false);
-
     }
-
   }
 
-
-
-
-
   return (
-
     <div
       className="
-      min-h-screen
-      flex
-      items-center
-      justify-center
-      bg-gradient-to-br
-      from-gray-900
-      via-gray-800
-      to-gray-900
-      px-4
-      "
+  min-h-screen
+  flex
+  items-center
+  justify-center
+  bg-gradient-to-br
+  from-gray-900
+  via-gray-800
+  to-gray-900
+  px-4
+  py-8
+  "
     >
-
-
       <div
         className="
-        w-full
-        max-w-md
-        rounded-2xl
-        bg-white
-        p-8
-        shadow-2xl
-        "
+    w-full
+    max-w-md
+    rounded-2xl
+    bg-white
+    p-8
+    shadow-2xl
+    "
       >
-
-
-
         {/* Header */}
 
         <div
@@ -143,8 +96,6 @@ export default function RegisterPage() {
           mb-8
           "
         >
-
-
           <div
             className="
             mx-auto
@@ -162,8 +113,6 @@ export default function RegisterPage() {
             💳
           </div>
 
-
-
           <h1
             className="
             mt-4
@@ -175,8 +124,6 @@ export default function RegisterPage() {
             Create Account
           </h1>
 
-
-
           <p
             className="
             mt-2
@@ -185,20 +132,11 @@ export default function RegisterPage() {
           >
             Join Expense Tracker
           </p>
-
-
         </div>
 
-
-
-
-
-
-        {
-          error && (
-
-            <div
-              className="
+        {error && (
+          <div
+            className="
               mb-5
               rounded-lg
               bg-red-50
@@ -207,17 +145,10 @@ export default function RegisterPage() {
               text-sm
               text-red-600
               "
-            >
-              {error}
-            </div>
-
-          )
-        }
-
-
-
-
-
+          >
+            {error}
+          </div>
+        )}
 
         <form
           onSubmit={handleRegister}
@@ -225,14 +156,9 @@ export default function RegisterPage() {
           space-y-5
           "
         >
-
-
-
-
           {/* Name */}
 
           <div>
-
             <label
               className="
               mb-2
@@ -245,15 +171,10 @@ export default function RegisterPage() {
               Name
             </label>
 
-
             <input
-
               value={name}
-
-              onChange={(e)=>setName(e.target.value)}
-
+              onChange={(e) => setName(e.target.value)}
               placeholder="Mayuresh Raskar"
-
               className="
               w-full
               rounded-xl
@@ -267,23 +188,13 @@ export default function RegisterPage() {
               focus:ring-2
               focus:ring-blue-200
               "
-
               required
-
             />
-
           </div>
-
-
-
-
-
-
 
           {/* Email */}
 
           <div>
-
             <label
               className="
               mb-2
@@ -296,17 +207,11 @@ export default function RegisterPage() {
               Email
             </label>
 
-
             <input
-
               type="email"
-
               value={email}
-
-              onChange={(e)=>setEmail(e.target.value)}
-
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="mayuresh@gmail.com"
-
               className="
               w-full
               rounded-xl
@@ -320,24 +225,13 @@ export default function RegisterPage() {
               focus:ring-2
               focus:ring-blue-200
               "
-
               required
-
             />
-
           </div>
-
-
-
-
-
-
-
 
           {/* Organization Name */}
 
           <div>
-
             <label
               className="
               mb-2
@@ -350,15 +244,10 @@ export default function RegisterPage() {
               Organization Name
             </label>
 
-
             <input
-
               value={organizationName}
-
-              onChange={(e)=>setOrganizationName(e.target.value)}
-
+              onChange={(e) => setOrganizationName(e.target.value)}
               placeholder="Acme Technologies"
-
               className="
               w-full
               rounded-xl
@@ -372,24 +261,13 @@ export default function RegisterPage() {
               focus:ring-2
               focus:ring-blue-200
               "
-
               required
-
             />
-
           </div>
-
-
-
-
-
-
-
 
           {/* Organization Slug */}
 
           <div>
-
             <label
               className="
               mb-2
@@ -402,15 +280,10 @@ export default function RegisterPage() {
               Organization Slug
             </label>
 
-
             <input
-
               value={organizationSlug}
-
-              onChange={(e)=>setOrganizationSlug(e.target.value)}
-
+              onChange={(e) => setOrganizationSlug(e.target.value)}
               placeholder="acme-technologies"
-
               className="
               w-full
               rounded-xl
@@ -424,24 +297,13 @@ export default function RegisterPage() {
               focus:ring-2
               focus:ring-blue-200
               "
-
               required
-
             />
-
           </div>
-
-
-
-
-
-
-
 
           {/* Password */}
 
           <div>
-
             <label
               className="
               mb-2
@@ -454,17 +316,11 @@ export default function RegisterPage() {
               Password
             </label>
 
-
             <input
-
               type="password"
-
               value={password}
-
-              onChange={(e)=>setPassword(e.target.value)}
-
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="Minimum 8 characters"
-
               className="
               w-full
               rounded-xl
@@ -478,26 +334,13 @@ export default function RegisterPage() {
               focus:ring-2
               focus:ring-blue-200
               "
-
               required
-
             />
-
-
           </div>
 
-
-
-
-
-
-
           <button
-
             type="submit"
-
             disabled={loading}
-
             className="
             w-full
             rounded-xl
@@ -508,33 +351,13 @@ export default function RegisterPage() {
             hover:bg-blue-700
             disabled:opacity-50
             "
-
           >
-
-            {
-              loading
-              ? "Creating..."
-              : "Sign Up"
-            }
-
-
+            {loading ? "Creating..." : "Sign Up"}
           </button>
-
-
-
-
         </form>
 
-
-
-
-
-
-
         <button
-
-          onClick={()=>router.push("/login")}
-
+          onClick={() => router.push("/login")}
           className="
           mt-5
           w-full
@@ -546,22 +369,10 @@ export default function RegisterPage() {
           text-gray-700
           hover:bg-gray-50
           "
-
         >
-
           Already have account? Login
-
         </button>
-
-
-
-
-
       </div>
-
-
     </div>
-
   );
-
 }
