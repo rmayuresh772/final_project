@@ -10,6 +10,7 @@ import {
   BarChart3,
   User,
   UserPlus,
+  Mail,
 } from "lucide-react";
 
 const menu = [
@@ -39,9 +40,14 @@ const menu = [
     icon: BarChart3,
   },
   {
-    name: "Invite Users",
-    href: "users/invite",
+    name: "Invite User",
+    href: "/users/invite",
     icon: UserPlus,
+  },
+  {
+    name: "Invitations",
+    href: "/invitations",
+    icon: Mail,
   },
   {
     name: "Profile",
@@ -72,6 +78,7 @@ export default function Sidebar() {
       "
     >
       {/* Logo */}
+
       <div
         className="
         border-b
@@ -102,6 +109,7 @@ export default function Sidebar() {
       </div>
 
       {/* Navigation */}
+
       <nav
         className="
         flex-1
@@ -147,6 +155,7 @@ export default function Sidebar() {
       </nav>
 
       {/* Bottom */}
+
       <div
         className="
         border-t
@@ -181,7 +190,9 @@ export default function Sidebar() {
           </div>
 
           <div>
-            <p className="font-semibold">Mayuresh</p>
+            <p className="font-semibold">
+              Mayuresh
+            </p>
 
             <p className="text-xs text-slate-400">
               Administrator
