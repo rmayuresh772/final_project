@@ -9,6 +9,7 @@ import {
   ClipboardCheck,
   BarChart3,
   User,
+  UserPlus,
 } from "lucide-react";
 
 const menu = [
@@ -36,6 +37,11 @@ const menu = [
     name: "Reports",
     href: "/reports",
     icon: BarChart3,
+  },
+  {
+    name: "Invite Users",
+    href: "users/invite",
+    icon: UserPlus,
   },
   {
     name: "Profile",
@@ -66,7 +72,6 @@ export default function Sidebar() {
       "
     >
       {/* Logo */}
-
       <div
         className="
         border-b
@@ -97,7 +102,6 @@ export default function Sidebar() {
       </div>
 
       {/* Navigation */}
-
       <nav
         className="
         flex-1
@@ -128,7 +132,6 @@ export default function Sidebar() {
                 text-[15px]
                 font-medium
                 transition-all
-
                 ${
                   active
                     ? "bg-blue-600 text-white shadow-lg"
@@ -144,7 +147,6 @@ export default function Sidebar() {
       </nav>
 
       {/* Bottom */}
-
       <div
         className="
         border-t
