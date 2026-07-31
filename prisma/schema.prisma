@@ -13,6 +13,11 @@ enum Role {
   EMPLOYEE
 }
 
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+}
+
 enum ExpenseStatus {
   DRAFT
   SUBMITTED
@@ -54,9 +59,11 @@ model User {
 
   role Role @default(EMPLOYEE)
 
-  expenses         Expense[]
-  auditLogs        AuditLog[]
-  invitedInvitations Invitation[] @relation("InvitedBy")
+  status UserStatus @default(ACTIVE)
+
+  expenses            Expense[]
+  auditLogs            AuditLog[]
+  invitedInvitations   Invitation[] @relation("InvitedBy")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
