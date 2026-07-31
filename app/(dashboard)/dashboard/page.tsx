@@ -4,7 +4,7 @@ import SummaryCards from "@/components/dashboard/SummaryCards";
 import RecentExpenses from "@/components/dashboard/RecentExpenses";
 import PendingExpenses from "@/components/dashboard/PendingExpenses";
 import MonthlyExpenseChart from "@/components/charts/MonthlyExpenseChart";
-import ExportCsvButton from "@/components/export/ExportCsvButton";
+import ExportCsvButton from "@/components/export/ExportButton";
 
 
 async function getDashboardData() {
