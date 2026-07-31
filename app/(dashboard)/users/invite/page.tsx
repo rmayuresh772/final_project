@@ -2,31 +2,25 @@ import InviteUserForm from "@/components/users/InviteUserForm";
 
 
 export default function InviteUserPage() {
+
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+
+    <div className="min-h-screen bg-gray-50 p-8">
 
 
-      {/* Center Header + Form */}
+      <div className="max-w-3xl mx-auto">
 
-      <div
-        className="
-        mx-auto
-        max-w-xl
-        "
-      >
 
-        <div
-          className="
-          mb-8
-          text-center
-          "
-        >
+        {/* Header */}
+
+        <div className="mb-8">
+
 
           <h1
             className="
             text-3xl
             font-bold
-            text-black
+            text-gray-900
             "
           >
             Invite Team Member
@@ -35,59 +29,33 @@ export default function InviteUserPage() {
 
           <p
             className="
+            text-gray-500
             mt-2
-            text-base
-            text-gray-700
             "
           >
             Invite a new member to your organization.
           </p>
 
-        </div>
-
-
-
-        <div
-          className="
-          rounded-xl
-          bg-white
-          border
-          border-gray-200
-          p-8
-          shadow-sm
-          "
-        >
-
-          <h2
-            className="
-            text-xl
-            font-semibold
-            text-black
-            "
-          >
-            Invite User
-          </h2>
-
-
-          <p
-            className="
-            mt-2
-            mb-6
-            text-gray-600
-            "
-          >
-            Send an invitation to join your organization.
-          </p>
-
-
-          <InviteUserForm />
 
         </div>
+
+
+
+        {/* Form Header */}
+
+
+
+
+        {/* Form */}
+
+        <InviteUserForm />
 
 
       </div>
 
 
     </div>
+
   );
+
 }

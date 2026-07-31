@@ -11,6 +11,7 @@ import {
   User,
   UserPlus,
   Mail,
+  CreditCard,
 } from "lucide-react";
 
 const menu = [
@@ -79,52 +80,41 @@ export default function Sidebar() {
     >
       {/* Logo */}
 
-      <div
-        className="
-        border-b
-        border-slate-700
-        px-8
-        py-8
-        "
-      >
-        <h1
-          className="
-          text-2xl
-          font-bold
-          tracking-wide
-          "
-        >
-          💳 Expense Tracker
-        </h1>
+      <div className="flex items-center gap-3 px-5 py-4">
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600">
+          <CreditCard className="h-6 w-6 text-white" />
+        </div>
+        {/* Logo */}
 
-        <p
-          className="
-          mt-2
-          text-sm
-          text-slate-400
-          "
-        >
-          Company Portal
-        </p>
+        {/* Brand */}
+        <div className="leading-tight">
+          <h1 className="text-[22px] font-semibold tracking-tight text-white">
+            Expense Tracker
+          </h1>
+
+          <p className="mt-1 text-xs font-medium text-slate-400">
+            Company Portal
+          </p>
+        </div>
       </div>
 
       {/* Navigation */}
 
       <nav
         className="
-        flex-1
-        overflow-y-auto
-        px-4
-        py-6
-        space-y-2
-        "
+  sidebar-scroll
+  flex-1
+  overflow-y-auto
+  px-4
+  py-6
+  space-y-2
+  "
       >
         {menu.map((item) => {
           const Icon = item.icon;
 
           const active =
-            pathname === item.href ||
-            pathname.startsWith(item.href + "/");
+            pathname === item.href || pathname.startsWith(item.href + "/");
 
           return (
             <Link
@@ -190,13 +180,9 @@ export default function Sidebar() {
           </div>
 
           <div>
-            <p className="font-semibold">
-              Mayuresh
-            </p>
+            <p className="font-semibold">Mayuresh</p>
 
-            <p className="text-xs text-slate-400">
-              Administrator
-            </p>
+            <p className="text-xs text-slate-400">Administrator</p>
           </div>
         </div>
       </div>

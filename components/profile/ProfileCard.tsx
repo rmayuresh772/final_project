@@ -1,28 +1,31 @@
 "use client";
 
+import LogoutButton from "./LogoutButton";
+
 
 export default function ProfileCard({
   user,
-}:{
-  user:any;
-}){
+}: {
+  user: any;
+}) {
 
 
   return (
 
     <div
       className="
-      mt-8
-      max-w-xl
+      bg-white
       rounded-2xl
+      shadow-sm
       border
       border-gray-200
-      bg-white
       p-8
-      shadow-sm
       "
     >
 
+
+
+      {/* Profile Header */}
 
       <div
         className="
@@ -58,26 +61,29 @@ export default function ProfileCard({
 
 
 
+
+
         <div>
 
 
           <h2
             className="
             text-xl
-            font-bold
+            font-semibold
             text-gray-900
             "
           >
-            {user.name}
+            {user?.name}
           </h2>
 
 
           <p
             className="
-            text-gray-600
+            text-gray-500
+            mt-1
             "
           >
-            {user.email}
+            {user?.email}
           </p>
 
 
@@ -89,53 +95,109 @@ export default function ProfileCard({
 
 
 
+
+
+
+      {/* Profile Details */}
+
       <div
         className="
         mt-8
-        space-y-4
+        space-y-6
         "
       >
 
 
-        <div
-          className="
-          rounded-lg
-          bg-gray-50
-          p-4
-          "
-        >
 
-          <p className="text-sm text-gray-500">
+        {/* Role */}
+
+        <div>
+
+          <label
+            className="
+            block
+            text-sm
+            font-medium
+            text-gray-700
+            mb-2
+            "
+          >
             Role
-          </p>
+          </label>
 
 
-          <p className="mt-1 font-semibold text-gray-900">
-            {user.role}
-          </p>
+          <div
+            className="
+            w-full
+            rounded-xl
+            border
+            border-gray-300
+            px-4
+            py-3
+            text-gray-900
+            "
+          >
+
+            {user?.role}
+
+          </div>
+
 
         </div>
 
 
 
-        <div
-          className="
-          rounded-lg
-          bg-gray-50
-          p-4
-          "
-        >
 
-          <p className="text-sm text-gray-500">
+
+
+        {/* Organization */}
+
+        <div>
+
+
+          <label
+            className="
+            block
+            text-sm
+            font-medium
+            text-gray-700
+            mb-2
+            "
+          >
             Organization
-          </p>
+          </label>
 
 
-          <p className="mt-1 font-semibold text-gray-900">
-            {user.organization?.name ?? "N/A"}
-          </p>
+          <div
+            className="
+            w-full
+            rounded-xl
+            border
+            border-gray-300
+            px-4
+            py-3
+            text-gray-900
+            "
+          >
+
+            {
+              user?.organization?.name ?? "N/A"
+            }
+
+          </div>
+
 
         </div>
+
+
+
+
+
+
+        {/* Logout */}
+
+        <LogoutButton />
+
 
 
       </div>
