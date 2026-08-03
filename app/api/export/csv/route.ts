@@ -131,18 +131,23 @@ export async function GET(req: NextRequest) {
 
 
 
-        let cursor:string | undefined = undefined;
-
+        let cursor: string | undefined = undefined;
 
         const LIMIT = 100;
 
+        type ExpenseWithUser = Prisma.ExpenseGetPayload<{
+          include: {
+            user: {
+              select: {
+                name: true;
+                email: true;
+              };
+            };
+          };
+        }>;
 
-
-        while(true){
-
-
-
-          const expenses = await prisma.expense.findMany({
+        while (true) {
+          const expenses: ExpenseWithUser[] = await prisma.expense.findMany({
 
             where,
 

@@ -2,27 +2,25 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/stores/auth-store";
 
 
 export default function LogoutButton(){
-
   const router = useRouter();
-
+  const clearUser = useAuthStore((state) => state.clearUser);
   const [open, setOpen] = useState(false);
 
 
 
 async function handleLogout(){
-
   await fetch("/api/auth/logout", {
-    method:"POST",
+    method: "POST",
   });
 
+  clearUser();
 
   router.push("/login");
-
   router.refresh();
-
 }
 
 

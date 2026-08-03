@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
-import { Prisma, Role } from "@prisma/client";
+import { ExpenseCategory, ExpenseStatus, Prisma, Role } from "@prisma/client";
 
 import { prisma } from "@/lib/prisma";
 import { requireAuth, requireRole } from "@/lib/auth";
@@ -41,12 +41,12 @@ export async function GET(req: NextRequest) {
       },
     };
 
-    if (status) {
-      where.status = status as any;
+    if (status && Object.values(ExpenseStatus).includes(status as ExpenseStatus)) {
+      where.status = status as ExpenseStatus;
     }
 
-    if (category) {
-      where.category = category as any;
+    if (category && Object.values(ExpenseCategory).includes(category as ExpenseCategory)) {
+      where.category = category as ExpenseCategory;
     }
 
     if (submitter) {

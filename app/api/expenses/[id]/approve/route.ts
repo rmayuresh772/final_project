@@ -37,12 +37,19 @@ export async function POST(
     });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Something went wrong";
+    const statusCode =
+      error instanceof Error &&
+      "statusCode" in error &&
+      typeof (error as Error & { statusCode?: number }).statusCode === "number"
+        ? (error as Error & { statusCode?: number }).statusCode
+        : 400;
+
     return NextResponse.json(
       {
         success: false,
         message,
       },
-      { status: 400 }
+      { status: statusCode }
     );
   }
 }

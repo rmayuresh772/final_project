@@ -49,12 +49,17 @@ export async function getExpenseByIdService(
 export async function updateExpenseService(
   id: string,
   organizationId: string,
+  userId: string,
   data: Partial<CreateExpenseInput>
 ) {
   const existing = await getExpenseById(id, organizationId);
 
   if (!existing) {
     throw new Error("Expense not found");
+  }
+
+  if (existing.userId !== userId) {
+    throw new Error("You can only edit your own expenses");
   }
 
   if (existing.status !== "DRAFT") {
@@ -75,6 +80,10 @@ export async function deleteExpenseService(
 
   if (!expense) {
     throw new Error("Expense not found");
+  }
+
+  if (expense.userId !== userId) {
+    throw new Error("You can only delete your own expenses");
   }
 
   if (expense.status !== "DRAFT") {
@@ -107,6 +116,10 @@ export async function submitExpenseService(
 
   if (!expense) {
     throw new Error("Expense not found");
+  }
+
+  if (expense.userId !== userId) {
+    throw new Error("You can only submit your own expenses");
   }
 
   if (expense.status !== "DRAFT") {
@@ -149,7 +162,9 @@ export async function approveExpenseService(
     const { checkBudget } = await import("@/services/budget.service");
     const budgetWarning = await checkBudget(organizationId, Number(expense.amount));
     if (budgetWarning) {
-      throw new Error(budgetWarning);
+      const error = new Error(budgetWarning) as Error & { statusCode?: number };
+      error.statusCode = 422;
+      throw error;
     }
   }
 

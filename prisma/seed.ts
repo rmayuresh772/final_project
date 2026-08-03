@@ -103,7 +103,22 @@ async function main() {
   const currentMonth = now.getMonth();
   const currentYear = now.getFullYear();
 
-  const expensesData = [
+  type ExpenseSeed = {
+    userId: string;
+    title: string;
+    description: string;
+    amount: number;
+    category: ExpenseCategory;
+    status: ExpenseStatus;
+    dateIncurred: Date;
+    receiptReference: string;
+    submittedAt?: Date | null;
+    approvedAt?: Date | null;
+    rejectedAt?: Date | null;
+    rejectionReason?: string | null;
+  };
+
+  const expensesData: ExpenseSeed[] = [
     {
       userId: employee1.id,
       title: "Flight to Mumbai",
@@ -213,8 +228,8 @@ async function main() {
         receiptReference: expenseData.receiptReference,
         submittedAt: expenseData.submittedAt ?? null,
         approvedAt: expenseData.approvedAt ?? null,
-        rejectedAt: (expenseData as any).rejectedAt ?? null,
-        rejectionReason: (expenseData as any).rejectionReason ?? null,
+        rejectedAt: expenseData.rejectedAt ?? null,
+        rejectionReason: expenseData.rejectionReason ?? null,
       },
     });
 
@@ -257,7 +272,7 @@ async function main() {
           entityId: expense.id,
           fromStatus: ExpenseStatus.SUBMITTED,
           toStatus: ExpenseStatus.REJECTED,
-          metadata: { reason: (expenseData as any).rejectionReason },
+          metadata: { reason: expenseData.rejectionReason },
         },
       });
     }

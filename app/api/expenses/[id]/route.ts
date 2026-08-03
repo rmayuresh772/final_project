@@ -58,6 +58,7 @@ export async function PATCH(
     const expense = await updateExpenseService(
       id,
       user.organizationId,
+      user.userId,
       data
     );
 

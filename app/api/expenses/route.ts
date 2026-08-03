@@ -26,11 +26,13 @@ export async function POST(req: NextRequest) {
       },
       { status: 201 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Something went wrong";
+
     return NextResponse.json(
       {
         success: false,
-        message: error.message,
+        message,
       },
       { status: 400 }
     );

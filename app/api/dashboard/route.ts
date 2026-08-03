@@ -15,17 +15,17 @@ export async function GET() {
       success: true,
       data: dashboard,
     });
-  } catch (error: any) {
-  console.error(error);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Something went wrong";
 
-  return NextResponse.json(
-    {
-      success: false,
-      message: error.message,
-    },
-    {
-      status: 500,
-    }
-  );
-}
+    return NextResponse.json(
+      {
+        success: false,
+        message,
+      },
+      {
+        status: 500,
+      }
+    );
+  }
 }

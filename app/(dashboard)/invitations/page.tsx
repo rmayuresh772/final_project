@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { getApiUrl } from "@/lib/api-url";
 
 import InvitationTable from "@/components/invitations/InvitationTable";
 
@@ -11,13 +12,10 @@ async function getInvitations() {
     Cookie: `token=${token}`,
   };
 
-  const response = await fetch(
-    "http://localhost:3000/api/organizations/invitations",
-    {
-      headers,
-      cache: "no-store",
-    }
-  );
+  const response = await fetch(getApiUrl("/api/organizations/invitations"), {
+    headers,
+    cache: "no-store",
+  });
 
   const result = await response.json();
 
@@ -31,9 +29,7 @@ export default async function InvitationsPage() {
     <div className="min-h-screen bg-slate-50 p-10">
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-4xl font-bold text-slate-900">
-            Invitations
-          </h1>
+          <h1 className="text-4xl font-bold text-slate-900">Invitations</h1>
 
           <p className="mt-2 text-slate-500">
             View all invitations sent to employees and managers.

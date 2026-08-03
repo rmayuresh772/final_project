@@ -86,12 +86,14 @@ DRAFT → SUBMITTED → APPROVED
 ## 5. Dashboard Aggregations
 
 ### SQL-Level Aggregations
-- **Decision**: All aggregations (counts, sums) use Prisma's `count()` and `aggregate()` which translate to SQL.
-- **Rationale**: The spec explicitly requires "All aggregations must happen in SQL/Prisma — not computed in JavaScript after fetching all rows." The dashboard summary uses `Promise.all` with parallel `count` and `aggregate` queries.
+- **Decision**: All aggregations (counts, sums, groupBy) use Prisma's `count()`, `aggregate()`, and `groupBy()` which translate to SQL.
+- **Rationale**: The spec explicitly requires "All aggregations must happen in SQL/Prisma — not computed in JavaScript after fetching all rows." The monthly trend, category breakdown, top spenders, and budget status all use `groupBy` with `_sum` — computed in SQL.
 
 ### Role-Specific Views
 - **Decision**: The dashboard page checks the user's role and renders different components.
-- **Rationale**: Employee, Manager, and Admin dashboards show different data. This is handled at the component level with role-based rendering.
+- **Employee**: Own expenses grouped by status (SQL count), total spend this month vs last month (SQL aggregate).
+- **Manager**: Team spend by category this month (Recharts bar chart, SQL groupBy), top 5 spenders (SQL groupBy + orderBy + take), pending approval count.
+- **Admin**: Total monthly spend vs budget with >80% visual indicator, organisation-wide category breakdown (SQL groupBy), monthly trend for last 6 months (SQL groupBy).
 
 ---
 
@@ -110,8 +112,8 @@ DRAFT → SUBMITTED → APPROVED
 ## 7. State Management
 
 ### Zustand
-- **Decision**: Zustand is listed as a dependency but the current implementation uses server components for most data fetching.
-- **Rationale**: Server components fetch data directly, eliminating the need for client-side state management for initial data. Zustand would be used for client-side interactions like form state, modals, and optimistic updates.
+- **Decision**: Zustand is used for client-side auth state via `stores/auth-store.ts` with `persist` middleware.
+- **Rationale**: The auth store holds the current user (id, name, email, role, organizationId) and is set on login and cleared on logout. Server components fetch data directly, eliminating the need for client-side state management for initial data.
 
 ### Zod Validation
 - **Decision**: All API inputs are validated with Zod schemas.
@@ -122,8 +124,8 @@ DRAFT → SUBMITTED → APPROVED
 ## 8. TypeScript
 
 ### Strict Mode
-- **Decision**: `tsconfig.json` has `strict: true`.
-- **Rationale**: The spec requires "TypeScript strict mode. Zero 'any'. Zero ts-ignore." Some routes still use `any` for error types, which should be refactored to `unknown` with proper type narrowing.
+- **Decision**: `tsconfig.json` has `strict: true`. Zero `any`. Zero `ts-ignore`. `tsc --noEmit` passes with zero errors.
+- **Rationale**: The spec requires "TypeScript strict mode. Zero 'any'. Zero ts-ignore." All error handling uses `unknown` with proper type narrowing. All component props use explicit interfaces.
 
 ---
 
@@ -139,4 +141,4 @@ DRAFT → SUBMITTED → APPROVED
 
 ### Vercel + Railway
 - **Decision**: Frontend on Vercel, PostgreSQL on Railway.
-- **Rationale**: Vercel is the recommended deployment platform for Next.js. Railway provides a managed PostgreSQL database with a free tier suitable for demo purposes.
+- **Rationale**: Vercel is the recommended deployment platform for Next.js. Railway provides a managed PostgreSQL database with a free tier suitable for demo purposes. All API fetches use relative URLs (`/api/...`) so they work in any environment.

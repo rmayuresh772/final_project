@@ -46,10 +46,11 @@ export default function RegisterPage() {
       const data = await res.json();
 
       if (!data.success) {
+        const message = data.message;
         setError(
-          Array.isArray(data.message)
-            ? data.message.map((err: any) => err.message).join(", ")
-            : data.message || "Registration failed",
+          Array.isArray(message)
+            ? message.map((err: { message?: string }) => err.message ?? "").join(", ")
+            : message || "Registration failed",
         );
 
         return;

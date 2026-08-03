@@ -42,7 +42,7 @@ export async function GET() {
         ? "EXPIRED"
         : "PENDING",
       invitedBy: invite.invitedBy,
-      inviteLink: `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/users/accept-invite?token=${invite.token}`,
+      inviteLink: `${process.env.NEXT_PUBLIC_APP_URL ?? process.env.APP_URL ?? "http://localhost:3000"}/users/accept-invite?token=${invite.token}`,
     }));
 
     return NextResponse.json(

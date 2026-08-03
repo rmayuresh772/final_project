@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/stores/auth-store";
 
 
 export default function LoginPage() {
-
   const router = useRouter();
+  const setUser = useAuthStore((state) => state.setUser);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -53,11 +54,13 @@ export default function LoginPage() {
       }
 
 
-      localStorage.setItem(
-        "token",
-        data.data.token
-      );
-
+      setUser({
+        id: data.data.user.id,
+        name: data.data.user.name,
+        email: data.data.user.email,
+        role: data.data.user.role,
+        organizationId: data.data.user.organizationId,
+      });
 
       router.push("/dashboard");
 

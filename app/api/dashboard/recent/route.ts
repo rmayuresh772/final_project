@@ -7,9 +7,6 @@ import { getRecentExpensesService } from "@/services/dashboard.service";
 export async function GET() {
   try {
     const user = await requireAuth();
-    // const user = await requireAuth();
-
-    console.log("Logged in user:", user);
 
     const expenses = await getRecentExpensesService(
       user.organizationId
@@ -19,11 +16,12 @@ export async function GET() {
       success: true,
       data: expenses,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Something went wrong";
     return NextResponse.json(
       {
         success: false,
-        message: error.message,
+        message,
       },
       {
         status: 401,
